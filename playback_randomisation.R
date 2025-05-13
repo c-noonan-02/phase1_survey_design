@@ -56,6 +56,34 @@ View(woodland_playback_schedule)
 # save the schedule to the project folder as reference for designing playbacks
 write.csv(woodland_playback_schedule, "./data/phase1_woodland_playback.csv", row.names = FALSE)
 
+# create the playlist for the woodland playback experiments
+
+# define file paths
+source_folder <- "./data/audio_files"
+destination_folder <- "./data/woodland_playlist"
+
+# loop through each row of the schedule
+for (i in 1:nrow(woodland_playback_schedule)) {
+  
+  # get row data
+  species <- woodland_playback_schedule$species_call[i]
+  audiomoth <- woodland_playback_schedule$audiomoth_ID[i]
+  experiment <- woodland_playback_schedule$experiment_no[i]
+  
+  # generate the file name
+  track_number <- sprintf("%02d", i) # 0 to 2 digits
+  output_filename <- paste0(
+    track_number, " - ", species, " ", experiment, ".", audiomoth, ".wav")
+  
+  # build full paths
+  source_file <- file.path(source_folder, paste0(species, ".wav"))
+  destination_file <- file.path(destination_folder, output_filename)
+  
+  # copy the file
+  file.copy(from = source_file, to = destination_file, overwrite = TRUE)
+
+}
+
 
 
 ##### Phase One: Moorland Site #####
